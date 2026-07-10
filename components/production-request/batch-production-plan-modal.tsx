@@ -43,6 +43,20 @@ export default function BatchProductionPlanModal({
 }: BatchProductionPlanModalProps) {
   const [selectedDetail, setSelectedDetail] = useState<SelectedRequest | null>(null);
   const [activeTab, setActiveTab] = useState<'request' | 'lineSetup'>('request');
+  const [editable, setEditable] = useState<{
+    startDate: string;
+    endDate: string;
+    hardLevel: string;
+  }>({ startDate: '', endDate: '', hardLevel: '' });
+
+  const handleSelectRow = (req: SelectedRequest) => {
+    setSelectedDetail(req);
+    setEditable({
+      startDate: req.startDate || '',
+      endDate: req.endDate || '',
+      hardLevel: req.hardLevel != null ? String(req.hardLevel) : '1',
+    });
+  };
 
   if (!isOpen) return null;
 
@@ -105,7 +119,7 @@ export default function BatchProductionPlanModal({
                       className={`border-b border-slate-200 cursor-pointer hover:bg-blue-50 ${
                         selectedDetail?.id === req.id ? 'bg-blue-100' : idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'
                       }`}
-                      onClick={() => setSelectedDetail(req)}
+                      onClick={() => handleSelectRow(req)}
                     >
                       <td className="px-3 py-2">
                         <input type="checkbox" className="w-4 h-4" defaultChecked />
@@ -132,14 +146,13 @@ export default function BatchProductionPlanModal({
           </div>
 
           {/* Details of Selected Request */}
-          {selectedDetail && (
-            <div>
+          <div>
               <div className="flex items-center justify-between mb-4 pb-2 border-b">
                 <h3 className="text-sm font-semibold text-slate-900">
                   Detail of Selected Request
                 </h3>
                 <span className="text-sm text-blue-600 font-medium">
-                  {selectedDetail.code} - {selectedDetail.number}
+                  {selectedDetail ? `${selectedDetail.code} - ${selectedDetail.number}` : 'Select a request above'}
                 </span>
               </div>
 
@@ -172,43 +185,96 @@ export default function BatchProductionPlanModal({
                 <div className="grid grid-cols-2 gap-6 p-4 bg-slate-50 rounded border border-slate-200">
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Production Request Code</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.code}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.code ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Production Request No.</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.number}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.number ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Item Code</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.itemCode}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.itemCode ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Item Name</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.itemName}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.itemName ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Level</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.level}</div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-600 font-medium">Start Date</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.startDate}</div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-600 font-medium">End Date</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.endDate}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.level ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Qty (EA)</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.qty}</div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-slate-600 font-medium">Hard Level</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.hardLevel || '1'}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.qty ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
                   </div>
                   <div>
                     <label className="text-xs text-slate-600 font-medium">Routing</label>
-                    <div className="mt-1 text-sm text-slate-900">{selectedDetail.routing || '-'}</div>
+                    <input
+                      type="text"
+                      disabled
+                      value={selectedDetail?.routing ?? ''}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-slate-100 border border-slate-300 rounded disabled:cursor-not-allowed disabled:text-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-blue-700 font-semibold">Start Date</label>
+                    <input
+                      type="date"
+                      disabled={!selectedDetail}
+                      value={editable.startDate}
+                      onChange={(e) => setEditable((prev) => ({ ...prev, startDate: e.target.value }))}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-white border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-100 disabled:border-slate-300 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-blue-700 font-semibold">End Date</label>
+                    <input
+                      type="date"
+                      disabled={!selectedDetail}
+                      value={editable.endDate}
+                      onChange={(e) => setEditable((prev) => ({ ...prev, endDate: e.target.value }))}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-white border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-100 disabled:border-slate-300 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-blue-700 font-semibold">Hard Level</label>
+                    <input
+                      type="number"
+                      disabled={!selectedDetail}
+                      value={editable.hardLevel}
+                      onChange={(e) => setEditable((prev) => ({ ...prev, hardLevel: e.target.value }))}
+                      className="mt-1 w-full px-2 py-1.5 text-sm text-slate-900 bg-white border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-100 disabled:border-slate-300 disabled:cursor-not-allowed"
+                    />
                   </div>
                 </div>
               ) : (
@@ -257,7 +323,6 @@ export default function BatchProductionPlanModal({
                 </div>
               )}
             </div>
-          )}
 
         </div>
 
